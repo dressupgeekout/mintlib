@@ -129,7 +129,9 @@
 # ifdef __MINT__
 #  define NETBSD_INSPIRED 0
 # else
-#  define NETBSD_INSPIRED 1
+#  ifndef __NetBSD__
+#   define NETBSD_INSPIRED 1
+#  endif
 # endif
 #endif
 
