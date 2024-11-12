@@ -669,17 +669,17 @@ static void ATTRIBUTE_FORMAT((printf, 1, 2)) warning(const char *const string, .
    remove TEMPNAME if nonnull, and then exit.  */
 static void close_file(FILE *stream, const char *dir, const char *name, const char *tempname)
 {
-	const char *e = (fflush(stream) || ferror(stream)) ? _("I/O error") :
-		(stream != stdin && stream != stdout && stream != stderr ? fclose(stream) : 0) != 0 ? strerror(errno) : NULL;
-
-	if (e)
-	{
-		fprintf(stderr, "%s: %s%s%s%s%s\n", progname,
-				dir ? dir : "", dir ? "/" : "", name ? name : "", name ? ": " : "", e);
-		if (tempname)
-			remove(tempname);
-		exit(EXIT_FAILURE);
-	}
+  char const *e = (ferror(stream) ? _("I/O error")
+		   : fclose(stream) != 0 ? strerror(errno) : NULL);
+  if (e) {
+    fprintf(stderr, "%s: %s%s%s%s%s\n", progname,
+	    dir ? dir : "", dir ? "/" : "",
+	    name ? name : "", name ? ": " : "",
+	    e);
+    if (tempname)
+      remove(tempname);
+    exit(EXIT_FAILURE);
+  }
 }
 
 static void usage(FILE *stream, int status)
